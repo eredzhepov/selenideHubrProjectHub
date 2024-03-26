@@ -16,7 +16,7 @@ import static com.codeborne.selenide.Selenide.$$;
 public class HabrAllFlowsPage {
     private static final By ALL_FLOWS_SUMMARY = By.cssSelector(".tm-section-name__text");
     private static final By ALL_FLOWS_MENU_LIST = By.cssSelector(".tm-tabs__tab-link.tm-tabs__tab-link");
-
+    private static final By ADD_COMPANY_BUTTON = By.cssSelector(".tm-suggest-button");
     public Boolean flowsSummaryIsDisplayed(){
         return $(ALL_FLOWS_SUMMARY).isDisplayed();
     }
@@ -28,5 +28,13 @@ public class HabrAllFlowsPage {
     }
     public ElementsCollection getAllFlowsMenuList() {
         return $$(ALL_FLOWS_MENU_LIST);
+    }
+    public void elementFlowsMenuClick(int i){
+        getAllFlowsMenuList().get(i - 1).click();
+    }
+    public void clickAddCompanyButton(){
+        $(ADD_COMPANY_BUTTON)
+                .shouldBe(visible)
+                .click();
     }
 }

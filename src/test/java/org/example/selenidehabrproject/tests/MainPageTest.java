@@ -20,6 +20,7 @@ public class MainPageTest {
     HabrPasswordRecoveryPage habrPasswordRecoveryPage;
     HabrSignUpPage habrSignUpPage;
     HabrAllFlowsPage habrAllFlowsPage;
+    HabrCompanyPage habrCompanyPage;
     @BeforeAll
     public static void setUppAll(){
         Configuration.browserSize ="1200x800";
@@ -34,6 +35,7 @@ public class MainPageTest {
         habrPasswordRecoveryPage = page();
         habrSignUpPage = page();
         habrAllFlowsPage = page();
+        habrCompanyPage = page();
         open("https://habr.com/ru/feed/");
     }
     @Test
@@ -196,6 +198,35 @@ public class MainPageTest {
         for(int i = 0; i < amount; i++){
             assertEquals(expectedMenuPunctsArr[i],  actualMenuPuncts[i], "Пункты меню не совпадают");
         }
+    }
+    @Test
+    @Tag("18")
+    @DisplayName("Переход на страницу добавления компании")
+    public void addCompanyTitle(){
+        String expectedTitle = "https://company.habr.com/ru/corporate-blogs/";
+        mainPage.clickAllFlows();
+        habrAllFlowsPage.elementFlowsMenuClick(6);
+        habrAllFlowsPage.clickAddCompanyButton();
+        assertEquals(expectedTitle, habrCompanyPage.getCurrentUrlOfResult(), "Title на странице не соответствует");
+    }
+    @Test
+    @Tag("19")
+    @DisplayName("Развернуть тарифный план")
+    public void tarifPlanExpand(){
+        mainPage.clickAllFlows();
+        habrAllFlowsPage.elementFlowsMenuClick(6);
+        habrAllFlowsPage.clickAddCompanyButton();
+        assertTrue(habrCompanyPage.pricesBoxIsdisplayed(), "Блок с прайсом не появился");
+    }
+    @Test
+    @Tag("20")
+    @DisplayName("Отображение блока с контактами ")
+    public void contactBlockDisplayed(){
+        mainPage.clickAllFlows();
+        habrAllFlowsPage.elementFlowsMenuClick(6);
+        habrAllFlowsPage.clickAddCompanyButton();
+        habrCompanyPage.clickContactUsLink();
+        assertTrue(habrCompanyPage.contactsBoxtsIsDisplay(), "Блок с контактами не появился");
     }
 
 }
