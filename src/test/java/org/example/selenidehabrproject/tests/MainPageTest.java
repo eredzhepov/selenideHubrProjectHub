@@ -96,10 +96,45 @@ public class MainPageTest {
         assertFalse(habrSignUpPage.registrationButtonIsDisabled(), "Кнопка Зарегестрироваться активна");
     }
     @Test
+    @Tag("8")
+    @DisplayName("Регистрация, кнопка Зарегестрировать   активна если все инпуты заполнены")
+    public void signUpButtonIsEnable() {
+        String yourEmail = "usertestovich@mail.ru";
+        String yourNick = "monk";
+        String yourPassword = "12345678";
+        mainPage.logInButtonClick();
+        logInPage.clickForgotPasswordButton();
+        habrPasswordRecoveryPage.signUpButtonClick();
+        habrSignUpPage.setEmailInputField(yourEmail);
+        habrSignUpPage.setNickInputField(yourNick);
+        habrSignUpPage.setPasswordInputField(yourPassword);
+        habrSignUpPage.setPasswordRepeatInputField(yourPassword);
+        assertTrue(habrSignUpPage.registrationButtonIsDisabled(), "Кнопка Зарегестрироваться не активна");
+    }
+    @Test
     @Tag("9")
     @DisplayName("Появление Попап окна с настройками страницы ")
     public void totgglePopapWindowArize() {
         mainPage.userMenuToggleButtonClick();
         assertTrue(mainPage.popapToggleWindowIsDisplayed(), "Попап окно с настройками не появилось");
+    }
+    @Test
+    @Tag("10")
+    @DisplayName("Смена языка интерфейса")
+    public void switchInterfaceLanguage() {
+        String expectedlChangedToggleSummary = "Page settings";
+        mainPage.userMenuToggleButtonClick();
+        mainPage.clickRadioButtonEnglishInterface();
+        assertEquals(expectedlChangedToggleSummary, mainPage.getTogglePopapWidowSummary(), "Заголовок интерфейса не соответствует");
+    }
+    @Test
+    @Tag("11")
+    @DisplayName("Сохранение изменений языка интерфейса")
+    public void changeInterfaceLanguage() {
+        String expectedlMyFeedSummary = "My feed";
+        mainPage.userMenuToggleButtonClick();
+        mainPage.clickRadioButtonEnglishInterface();
+        mainPage.saveButtonClick();
+        assertEquals(expectedlMyFeedSummary, mainPage.getMyFeedSummary(), "Заголовок на странице не соответствует, язык не изменен");
     }
 }
