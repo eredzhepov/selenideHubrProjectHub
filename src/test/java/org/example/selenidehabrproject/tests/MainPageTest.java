@@ -2,29 +2,35 @@ package org.example.selenidehabrproject.tests;
 
 import com.codeborne.selenide.Configuration;
 import org.example.selenidehabrproject.pages.HabrPasswordRecoveryPage;
+import org.example.selenidehabrproject.pages.HabrSignUpPage;
 import org.example.selenidehabrproject.pages.LogInPage;
 import org.example.selenidehabrproject.pages.MainPage;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.page;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MainPageTest {
     MainPage mainPage;
     LogInPage logInPage;
     HabrPasswordRecoveryPage habrPasswordRecoveryPage;
+    HabrSignUpPage habrSignUpPage;
     @BeforeAll
     public static void setUppAll(){
         Configuration.browserSize ="1200x800";
     }
     @BeforeEach
     public void setUp(){
+
         Configuration.browserCapabilities = new ChromeOptions().addArguments("--remote-allow-origins=*");
+        Configuration.browserCapabilities = new ChromeOptions().setPageLoadStrategy(PageLoadStrategy.EAGER);
         mainPage = page();
         logInPage = page();
         habrPasswordRecoveryPage = page();
+        habrSignUpPage = page();
         open("https://habr.com/ru/feed/");
     }
     @Test
@@ -51,5 +57,49 @@ public class MainPageTest {
         logInPage.clickForgotPasswordButton();
         habrPasswordRecoveryPage.comeBackToLoginPage();
         assertTrue(logInPage.shadowBoxIsVisible(), "Окно логина не отобразилось");
+    }
+    @Test
+    @Tag("4")
+    @DisplayName("Переход в окно регистрации с попап окна Восстановление пароля")
+    public void goToSignUpFromRecoveryPassswordWindow() {
+        String actualTitle = "Регистрация";
+        mainPage.logInButtonClick();
+        logInPage.clickForgotPasswordButton();
+        habrPasswordRecoveryPage.signUpButtonClick();
+        assertEquals(actualTitle, habrSignUpPage.getSignUpShadowBoxTitle(), "Заголовок на странице регистрации не совпадает");
+    }
+    @Test
+    @Tag("5")
+    @DisplayName("Восстановление пароля, кнопка Отправить не активна")
+    public void recoveryPageSendButtonIsDisabled() {
+        mainPage.logInButtonClick();
+        logInPage.clickForgotPasswordButton();
+        assertFalse(habrPasswordRecoveryPage.subnitButtonIsDisable(), "Кнопка Отправить активна");
+    }
+    @Test
+    @Tag("6")
+    @DisplayName("Восстановление пароля, кнопка Отправить активна если в инпут ввести любой текст")
+    public void recoveryPageSendButtonIsEnable() {
+        String yourEmail = "usertestovich@mail.ru";
+        mainPage.logInButtonClick();
+        logInPage.clickForgotPasswordButton();
+        habrPasswordRecoveryPage.setEmailInputField(yourEmail);
+        assertTrue(habrPasswordRecoveryPage.subnitButtonIsDisable(), "Кнопка Отправить не активна");
+    }
+    @Test
+    @Tag("7")
+    @DisplayName("Регистрация, кнопка Зарегестрировать  не активна если в инпутgens не заполнены")
+    public void signUpButtonIsDisabled() {
+        mainPage.logInButtonClick();
+        logInPage.clickForgotPasswordButton();
+        habrPasswordRecoveryPage.signUpButtonClick();
+        assertFalse(habrSignUpPage.registrationButtonIsDisabled(), "Кнопка Зарегестрироваться активна");
+    }
+    @Test
+    @Tag("9")
+    @DisplayName("Появление Попап окна с настройками страницы ")
+    public void totgglePopapWindowArize() {
+        mainPage.userMenuToggleButtonClick();
+        assertTrue(mainPage.popapToggleWindowIsDisplayed(), "Попап окно с настройками не появилось");
     }
 }
