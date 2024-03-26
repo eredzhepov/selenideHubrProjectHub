@@ -1,13 +1,14 @@
 package org.example.selenidehabrproject.tests;
 
 import com.codeborne.selenide.Configuration;
-import org.example.selenidehabrproject.pages.HabrPasswordRecoveryPage;
-import org.example.selenidehabrproject.pages.HabrSignUpPage;
-import org.example.selenidehabrproject.pages.LogInPage;
-import org.example.selenidehabrproject.pages.MainPage;
+import com.codeborne.selenide.ElementsCollection;
+import org.example.selenidehabrproject.pages.*;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.PageLoadStrategy;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeOptions;
+
+import java.util.List;
 
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.page;
@@ -18,6 +19,7 @@ public class MainPageTest {
     LogInPage logInPage;
     HabrPasswordRecoveryPage habrPasswordRecoveryPage;
     HabrSignUpPage habrSignUpPage;
+    HabrAllFlowsPage habrAllFlowsPage;
     @BeforeAll
     public static void setUppAll(){
         Configuration.browserSize ="1200x800";
@@ -31,6 +33,7 @@ public class MainPageTest {
         logInPage = page();
         habrPasswordRecoveryPage = page();
         habrSignUpPage = page();
+        habrAllFlowsPage = page();
         open("https://habr.com/ru/feed/");
     }
     @Test
@@ -137,4 +140,62 @@ public class MainPageTest {
         mainPage.saveButtonClick();
         assertEquals(expectedlMyFeedSummary, mainPage.getMyFeedSummary(), "Заголовок на странице не соответствует, язык не изменен");
     }
+    @Test
+    @Tag("12")
+    @DisplayName("Возвращение текущих настроек - изменений языка интерфейса")
+    public void changeInterfaceLanguage1() {
+        String expectedlMyFeedSummary = "Моя лента";
+        mainPage.userMenuToggleButtonClick();
+        mainPage.clickRadioButtonRussianInterface();
+        mainPage.saveButtonClick();
+        assertEquals(expectedlMyFeedSummary, mainPage.getMyFeedSummary(), "Заголовок на странице не соответствует, язык не изменен");
+    }
+    @Test
+    @Tag("13")
+    @DisplayName("При помощи поиска, ввести  и отправить запрос")
+    public void findRequst() {
+        String yourRequest = "Reforge";
+        mainPage.searchButtonClick();
+        mainPage.findYourRequest(yourRequest);
+        assertEquals(yourRequest, mainPage.getSearchFieldText(), "Текст в поле поиска не соответствует");
+    }
+    @Test
+    @Tag("14")
+    @DisplayName("Раскрытие настроек ленты")
+    public void openFeedProperty() {
+        mainPage.clickFeedProperty();
+        assertTrue(mainPage.feedPropertyIsDisplayed(), "Окно с настройками не отобразились");
+    }
+    @Test
+    @Tag("15")
+    @DisplayName("Заголовок на странице с потоками - отображается")
+    public void flowsSuammaryDisplay() {
+        mainPage.clickAllFlows();
+        assertTrue(habrAllFlowsPage.flowsSummaryIsDisplayed(), "Заголовок на странице с потоками не отобразился");
+    }
+    @Test
+    @Tag("16")
+    @DisplayName("Все 6 пунктов меню на вкладке все потоки")
+    public void allMenuItemsAtTheAllflowsPage() {
+        int expectedAmount = 6;
+        mainPage.clickAllFlows();
+        assertEquals(expectedAmount, habrAllFlowsPage.getMenuPunctsAmount(), "Количество пунктов меню не совпадает");
+    }
+    @Test
+    @Tag("17")
+    @DisplayName("Соответствие всех пунктов меню ")
+    public void equalityAllMenuItemsAtTheAllflowsPage() {
+        String[] expectedMenuPunctsArr = {"Статьи", "Посты", "Новости", "Хабы", "Авторы", "Компании"};
+        int amount = habrAllFlowsPage.getAllFlowsMenuList().size();
+        ElementsCollection actualMenuPunct = habrAllFlowsPage.getAllFlowsMenuList();
+        String[] actualMenuPuncts = {};
+        for(int i = 0; i < amount; i++){
+            actualMenuPuncts[i] = actualMenuPunct.get(i).getText();
+        }
+        mainPage.clickAllFlows();
+        for(int i = 0; i < amount; i++){
+            assertEquals(expectedMenuPunctsArr[i],  actualMenuPuncts[i], "Пункты меню не совпадают");
+        }
+    }
+
 }
