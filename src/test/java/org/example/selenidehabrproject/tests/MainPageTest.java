@@ -5,10 +5,7 @@ import com.codeborne.selenide.ElementsCollection;
 import org.example.selenidehabrproject.pages.*;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.PageLoadStrategy;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeOptions;
-
-import java.util.List;
 
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.page;

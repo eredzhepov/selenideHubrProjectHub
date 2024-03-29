@@ -1,14 +1,8 @@
 package org.example.selenidehabrproject.pages;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.conditions.Enabled;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 
-import java.util.List;
-
-import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
